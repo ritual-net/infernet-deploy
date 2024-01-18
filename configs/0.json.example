@@ -1,0 +1,64 @@
+{
+  "log_path": "infernet_node.log",
+  "server": {
+    "port": 4000
+  },
+  "chain": {
+    "enabled": true,
+    "rpc_url": "http://127.0.0.1:8545",
+    "coordinator_address": "0x...",
+    "trail_head_blocks": 4,
+    "wallet": {
+      "max_gas_limit": 100000,
+      "private_key": "12345s"
+    }
+  },
+  "docker": {
+    "username": "username",
+    "password": "password"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379
+  },
+  "forward_stats": true,
+  "containers": [
+    {
+      "id": "container-1",
+      "image": "org1/image1:tag1",
+      "description": "Container 1 description",
+      "external": true,
+      "port": "4999",
+      "allowed_addresses": [],
+      "allowed_delegate_addresses": [],
+      "allowed_ips": [
+        "XX.XX.XX.XXX",
+        "XX.XX.XX.XXX"
+      ],
+      "command": "--bind=0.0.0.0:3000 --workers=2",
+      "env": {
+        "KEY1": "VALUE1",
+        "KEY2": "VALUE2"
+      },
+      "gpu": true
+    },
+    {
+      "id": "container-2",
+      "image": "org2/image2:tag2",
+      "description": "Container 2 description",
+      "external": false,
+      "port": "4998",
+      "allowed_addresses": [],
+      "allowed_delegate_addresses": [],
+      "allowed_ips": [
+        "XX.XX.XX.XXX",
+        "XX.XX.XX.XXX"
+      ],
+      "command": "--bind=0.0.0.0:3000 --workers=2",
+      "env": {
+        "KEY3": "VALUE3",
+        "KEY4": "VALUE4"
+      }
+    }
+  ]
+}

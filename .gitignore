@@ -1,0 +1,12 @@
+# Secret configs
+*.json
+configs/encoded
+
+# Deployment files
+*.tar.gz
+
+# Terraform
+.terraform/
+.terraform*
+terraform.tfvars
+terraform.tfstate*

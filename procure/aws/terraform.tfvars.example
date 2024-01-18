@@ -1,0 +1,14 @@
+access_key_id = "ACCESS_KEY_ID"
+secret_access_key = "SECRET_ACCESS_KEY"
+region  = "region-id"
+
+machine_type  = "machine-type"
+image = "ami-id"
+
+ip_allow_ssh  = ["192.168.1.100/32"]
+ip_allow_http = ["192.168.1.100/24"]
+ip_allow_http_from_port = 4000
+ip_allow_http_to_port = 4000
+
+deploy_router = true
+is_production = false
