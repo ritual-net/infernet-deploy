@@ -3,8 +3,8 @@ resource "google_compute_instance" "nodes" {
   provider = google
   machine_type = var.machine_type
 
-  count = var.node_count
-  name = "${var.instance_name}-${count.index}"
+  for_each = var.nodes
+  name = "node-${each.value}"
 
   network_interface {
     network = google_compute_network.node_net.id
@@ -12,7 +12,7 @@ resource "google_compute_instance" "nodes" {
     stack_type = "IPV4_IPV6"
 
     access_config {
-      nat_ip = google_compute_address.static_ip[count.index].address
+      nat_ip = google_compute_address.static_ip[each.key].address
       network_tier = "PREMIUM"
     }
 
@@ -40,7 +40,7 @@ resource "google_compute_instance" "nodes" {
     deploy-tar = filebase64("${path.module}/../deploy.tar.gz")
 
     # Node config
-    secret-config = filebase64("${path.module}/../../configs/${count.index}.json")
+    secret-config = filebase64("${path.module}/../../configs/${each.key}.json")
   }
 
   boot_disk {
@@ -52,16 +52,4 @@ resource "google_compute_instance" "nodes" {
 
   # Disabled in production
   allow_stopping_for_update = var.is_production ? false : true
-
-  #------------------------------------------------------------------------------
-  # confidential computing
-  confidential_instance_config {
-    enable_confidential_compute = var.is_confidential_compute ? true : false
-  }
-
-  # required confidential compute
-  scheduling {
-    on_host_maintenance = var.is_confidential_compute ? "TERMINATE" : "MIGRATE"
-  }
-  #------------------------------------------------------------------------------
 }

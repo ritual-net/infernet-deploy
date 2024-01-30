@@ -12,3 +12,9 @@ ip_allow_http_to_port = 4000
 
 deploy_router = true
 is_production = false
+
+name = "infernet-deployment"
+nodes = {
+    "infernet-node-1" = "infernet-node-1",
+    "infernet-node-2" = "infernet-node-2"
+}

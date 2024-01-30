@@ -7,7 +7,10 @@ resource "aws_instance" "infernet_router" {
   vpc_security_group_ids = [ aws_security_group.security_group.id ]
 
   # Startup script
-  user_data = templatefile("${path.module}/scripts/router.tpl", {region = var.region})
+  user_data = templatefile("${path.module}/scripts/router.tpl", {
+    region = var.region, 
+    cluster-name = var.name
+  })
 
   root_block_device {
     volume_size = 200
@@ -20,7 +23,7 @@ resource "aws_instance" "infernet_router" {
   disable_api_termination = var.is_production ? true : false
 
   tags = {
-    Name = "${var.instance_name}-router"
+    Name = "router-${var.name}"
   }
 }
 
@@ -28,7 +31,7 @@ resource "aws_instance" "infernet_router" {
 resource "aws_eip" "router_eip" {
   count = var.deploy_router ? 1 : 0
   tags = {
-    Name = "${var.instance_name}-router-eip"
+    Name = "router-eip-${var.name}"
   }
 }
 
@@ -44,7 +47,7 @@ resource "aws_eip_association" "eip_assoc" {
 resource "null_resource" "update_router" {
   count    = var.deploy_router ? 1 : 0
   triggers = {
-    node_ips = join("\n", aws_eip.static_ip[*].public_ip)
+    node-ips = join("\n", [for key, node in aws_instance.nodes: "${aws_eip.static_ip[key].public_ip}:4000"])
   }
 
   provisioner "local-exec" {
@@ -52,5 +55,5 @@ resource "null_resource" "update_router" {
     command = "aws ec2 reboot-instances --instance-ids ${aws_instance.infernet_router[0].id} --region ${var.region}"
   }
 
-  depends_on = [aws_instance.infernet_router[0], aws_ssm_parameter.node_ips]
+  depends_on = [aws_instance.infernet_router[0]]
 }

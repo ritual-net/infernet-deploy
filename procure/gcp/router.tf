@@ -1,7 +1,7 @@
 # Infernet Router
 resource "google_compute_instance" "infernet_router" {
   count        = var.deploy_router ? 1 : 0
-  name         = "${var.instance_name}-router"
+  name         = "router-${var.name}"
   machine_type = "e2-micro"
   zone         = var.zone
 
@@ -36,7 +36,7 @@ resource "google_compute_instance" "infernet_router" {
     startup-script = file("${path.module}/scripts/router.sh", )
 
     # Node IPs
-    node_ips = join("\n", [for ip in google_compute_address.static_ip : "${ip.address}:4000"])
+    node-ips = join("\n", [for ip in google_compute_address.static_ip : "${ip.address}:4000"])
   }
 
   boot_disk {
@@ -53,7 +53,7 @@ resource "google_compute_instance" "infernet_router" {
 # Router external IP
 resource "google_compute_address" "router_static_ip" {
   count  = var.deploy_router ? 1 : 0
-  name   = "${var.instance_name}-router-ip"
+  name   = "router-ip-${var.name}"
   region = var.region
   address_type = "EXTERNAL"
   network_tier = "PREMIUM"
@@ -63,7 +63,7 @@ resource "google_compute_address" "router_static_ip" {
 resource "null_resource" "router_restarter" {
   count    = var.deploy_router ? 1 : 0
   triggers = {
-    node_ips = join(",", [for ip in google_compute_address.static_ip : ip.address])
+    node-ips = join(",", [for ip in google_compute_address.static_ip : ip.address])
   }
 
   provisioner "local-exec" {
