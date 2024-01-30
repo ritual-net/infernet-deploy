@@ -8,7 +8,7 @@ resource "aws_instance" "infernet_router" {
 
   # Startup script
   user_data = templatefile("${path.module}/scripts/router.tpl", {
-    region = var.region, 
+    region = var.region,
     cluster-name = var.name
   })
 

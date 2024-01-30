@@ -33,7 +33,7 @@ resource "google_compute_instance" "infernet_router" {
 
   metadata = {
     # Startup script
-    startup-script = file("${path.module}/scripts/router.sh", )
+    startup-script = file("${path.module}/scripts/router.sh")
 
     # Node IPs
     node-ips = join("\n", [for ip in google_compute_address.static_ip : "${ip.address}:4000"])

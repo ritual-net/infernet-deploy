@@ -15,6 +15,6 @@ is_production = false
 
 name = "infernet-deployment"
 nodes = {
-    "infernet-node-1" = "infernet-node-1",
-    "infernet-node-2" = "infernet-node-2"
+    "infernet-node-1-key" = "infernet-node-1-name",
+    "infernet-node-2-key" = "infernet-node-2-name"
 }
