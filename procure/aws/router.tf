@@ -47,7 +47,7 @@ resource "aws_eip_association" "eip_assoc" {
 resource "null_resource" "update_router" {
   count    = var.deploy_router ? 1 : 0
   triggers = {
-    node-ips = join("\n", [for key, node in aws_instance.nodes: "${aws_eip.static_ip[key].public_ip}:4000"])
+    node-ips = join("\n", [for key, _ in aws_instance.nodes: "${aws_eip.static_ip[key].public_ip}:4000"])
   }
 
   provisioner "local-exec" {

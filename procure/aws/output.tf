@@ -4,7 +4,7 @@ output "router_ip" {
 
 output "nodes" {
   value = [
-    for key, node in aws_instance.nodes : {
+    for key, _ in aws_instance.nodes : {
       key  = key
       id   = aws_instance.nodes[key].id
       ip   = aws_eip.static_ip[key].public_ip
