@@ -24,13 +24,13 @@ variable "deploy_router" {
 
 # Nodes
 
-variable "node_count" {
-  description = "Number of nodes to create"
-  type        = number
+variable "nodes" {
+  description = "Map of node IDs to node names"
+  type = map(string)
 }
 
-variable "instance_name" {
-  description = "Name of the EC2 instances"
+variable "name" {
+  description = "Name of the Cluster"
   type        = string
 }
 

@@ -34,30 +34,19 @@ variable "deploy_router" {
 
 # Nodes
 
-variable "node_count" {
-  description = "Number of nodes to create"
-  type        = number
+variable "nodes" {
+  description = "Map of node IDs to node names"
+  type = map(string)
 }
 
-variable "instance_name" {
-  description = "Name of the GCE instances"
+variable "name" {
+  description = "Name of the Cluster"
   type        = string
 }
 
-# NOTE: needs to be N2D or C2D instance if using confidential computing is enabled,
-# i.e. if is_confidential_compute is true
-# e.g. "n2d-standard-2", "c2d-standard-4", etc.
-# https://cloud.google.com/confidential-computing/confidential-vm/docs/os-and-machine-type#machine-type
 variable "machine_type" {
-  description = "The machine type of the GCE instance"
+  description = "The machine type of the GCE instances"
   type        = string
-}
-
-# See machine_type note above
-variable "is_confidential_compute" {
-  description = "whether or not confidential computing is enabled"
-  type        = bool
-  default     = false
 }
 
 variable "image" {
@@ -70,7 +59,7 @@ variable "ip_allow_http" {
   type	      = list(string)
 }
 
-variable"ip_allow_http_ports" {
+variable "ip_allow_http_ports" {
   description = "Ports that accept HTTP traffic"
   type	      = list(string)
 }

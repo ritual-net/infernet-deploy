@@ -12,3 +12,9 @@ ip_allow_http_ports = ["4000"]
 
 deploy_router = true
 is_production = false
+
+name = "infernet-deployment"
+nodes = {
+    "infernet-node-1-key" = "infernet-node-1-name",
+    "infernet-node-2-key" = "infernet-node-2-name"
+}

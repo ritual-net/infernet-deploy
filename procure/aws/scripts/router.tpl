@@ -15,7 +15,7 @@ cat << 'EOF' > $HOME/run_on_reboot.sh
 #!/bin/bash
 
 # Fetch node IPs from metadata and save to file
-aws ssm get-parameter --name "node_ips" --with-decryption --query "Parameter.Value" --output text --region "${region}" > $HOME/ips.txt
+aws ssm get-parameter --name "node-ips-${cluster-name}" --with-decryption --query "Parameter.Value" --output text --region "${region}" > $HOME/ips.txt
 
 # Prune existing router container
 CONTAINER_NAME="router"

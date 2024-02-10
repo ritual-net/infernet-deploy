@@ -7,7 +7,7 @@ resource "aws_vpc" "node_vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "vpc-${var.instance_name}"
+    Name = "vpc-${var.name}"
   }
 }
 
@@ -21,16 +21,16 @@ resource "aws_subnet" "node_subnet" {
   assign_ipv6_address_on_creation = true
 
   tags = {
-    Name = "subnet-${var.instance_name}"
+    Name = "subnet-${var.name}"
   }
 }
 
 # Network Interface
 resource "aws_network_interface" "node_nic" {
-  count = var.node_count
+  for_each = var.nodes
   subnet_id = aws_subnet.node_subnet.id
   tags = {
-    Name = "${var.instance_name}-${count.index}-nic"
+    Name = "nic-${each.value}"
   }
 }
 
@@ -39,7 +39,7 @@ resource "aws_internet_gateway" "gateway" {
   vpc_id = aws_vpc.node_vpc.id
 
   tags = {
-    Name = "igw-${var.instance_name}"
+    Name = "igw-${var.name}"
   }
 }
 
@@ -58,7 +58,7 @@ resource "aws_route_table" "route_table" {
     }
 
     tags = {
-      Name = "rt-${var.instance_name}"
+      Name = "rt-${var.name}"
     }
 }
 
@@ -104,7 +104,7 @@ resource "aws_security_group" "security_group" {
   }
 
   tags = {
-    Name = "sg-${var.instance_name}"
+    Name = "sg-${var.name}"
   }
 }
 
@@ -112,12 +112,12 @@ resource "aws_security_group" "security_group" {
 
 # Node IPs
 resource "aws_eip" "static_ip" {
-  count = var.node_count
+  for_each = var.nodes
   depends_on = [aws_internet_gateway.gateway]
-  network_interface = aws_network_interface.node_nic[count.index].id
-  instance = aws_instance.nodes[count.index].id
+  network_interface = aws_network_interface.node_nic[each.key].id
+  instance = aws_instance.nodes[each.key].id
 
   tags = {
-    Name = "${var.instance_name}-${count.index}-eip"
+    Name = "eip-${each.value}"
   }
 }

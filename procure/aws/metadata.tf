@@ -1,22 +1,22 @@
 # Config files as secrets
 resource "aws_ssm_parameter" "config_file" {
-  count = var.node_count
+  for_each = var.nodes
 
-  name  = "config_${count.index}"
+  name  = "${each.key}.json"
   type  = "SecureString"
-  value = filebase64("${path.module}/../../configs/${count.index}.json")
+  value = filebase64("${path.module}/../../configs/${each.key}.json")
 }
 
 # Deployment files
 resource "aws_ssm_parameter" "deploy_tar" {
-  name  = "deploy_tar"
+  name  = "deploy-tar-${var.name}"
   type  = "SecureString"
   value = filebase64("${path.module}/../deploy.tar.gz")
 }
 
 # Node IPs
 resource "aws_ssm_parameter" "node_ips" {
-  name  = "node_ips"
+  name  = "node-ips-${var.name}"
   type  = "String"
-  value = join("\n", [for ip in aws_eip.static_ip[*].public_ip : "${ip}:4000"])
+  value = join("\n", [for key, _ in aws_instance.nodes: "${aws_eip.static_ip[key].public_ip}:4000"])
 }
