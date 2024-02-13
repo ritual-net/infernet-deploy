@@ -3,7 +3,7 @@
 variable "gcp_credentials_file_path" {
   description = "Path to the GCP credentials file"
   type        = string
-  default     = "terraform-deployer-key.json"
+  default     = "ritual-deployer-key.json"
 }
 
 variable "service_account_email" {

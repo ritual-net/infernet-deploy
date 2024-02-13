@@ -21,6 +21,9 @@ init: check-provider
 
 # Define the plan target
 plan: check-provider
+	@echo "Preparing deployment files..."
+	@chmod +x prepare_files.sh
+	@./prepare_files.sh
 	@echo "Generating Terraform plan..."
 	$(TERRAFORM_CMD) -chdir=$(provider) plan
 
@@ -33,7 +36,6 @@ apply: check-provider
 	@$(TERRAFORM_CMD) -chdir=$(provider) apply
 
 # Define the destroy target
-destroy:
-	@[[ "$(provider)" == "aws" || "$(provider)" == "gcp" ]] || (echo "Usage: 'make destroy provider={aws, gcp}'" && exit 1)
+destroy: check-provider
 	@echo "Destroying Terraform resources..."
 	@$(TERRAFORM_CMD) -chdir=$(provider) destroy
