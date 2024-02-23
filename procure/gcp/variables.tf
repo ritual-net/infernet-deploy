@@ -67,12 +67,12 @@ variable "image" {
 
 variable "ip_allow_http" {
   description = "IP addresses and/or ranges to allow HTTP traffic from"
-  type	      = list(string)
+  type        = list(string)
 }
 
-variable"ip_allow_http_ports" {
+variable "ip_allow_http_ports" {
   description = "Ports that accept HTTP traffic"
-  type	      = list(string)
+  type        = list(string)
 }
 
 variable "ip_allow_ssh" {

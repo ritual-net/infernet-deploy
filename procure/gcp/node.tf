@@ -1,23 +1,23 @@
 # GCE instances
 resource "google_compute_instance" "nodes" {
-  provider = google
+  provider     = google
   machine_type = var.machine_type
 
   count = var.node_count
-  name = "${var.instance_name}-${count.index}"
+  name  = "${var.instance_name}-${count.index}"
 
   network_interface {
-    network = google_compute_network.node_net.id
+    network    = google_compute_network.node_net.id
     subnetwork = google_compute_subnetwork.node_subnet.id
     stack_type = "IPV4_IPV6"
 
     access_config {
-      nat_ip = google_compute_address.static_ip[count.index].address
+      nat_ip       = google_compute_address.static_ip[count.index].address
       network_tier = "PREMIUM"
     }
 
     ipv6_access_config {
-      network_tier  = "PREMIUM"
+      network_tier = "PREMIUM"
     }
   }
 
@@ -46,7 +46,7 @@ resource "google_compute_instance" "nodes" {
   boot_disk {
     initialize_params {
       image = var.image
-      size = 200
+      size  = 200
     }
   }
 

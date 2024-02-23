@@ -1,13 +1,13 @@
 # Infernet Router
 resource "aws_instance" "infernet_router" {
-  count           = var.deploy_router ? 1 : 0
-  ami             = "ami-07b36ea9852e986ad"
-  instance_type   = "t2.micro"
-  subnet_id       = aws_subnet.node_subnet.id
-  vpc_security_group_ids = [ aws_security_group.security_group.id ]
+  count                  = var.deploy_router ? 1 : 0
+  ami                    = "ami-07b36ea9852e986ad"
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.node_subnet.id
+  vpc_security_group_ids = [aws_security_group.security_group.id]
 
   # Startup script
-  user_data = templatefile("${path.module}/scripts/router.tpl", {region = var.region})
+  user_data = templatefile("${path.module}/scripts/router.tpl", { region = var.region })
 
   root_block_device {
     volume_size = 200
@@ -42,14 +42,14 @@ resource "aws_eip_association" "eip_assoc" {
 
 # Reboot router when node IPs change, so it can pick up new nodes and remove old ones
 resource "null_resource" "update_router" {
-  count    = var.deploy_router ? 1 : 0
+  count = var.deploy_router ? 1 : 0
   triggers = {
     node_ips = join("\n", aws_eip.static_ip[*].public_ip)
   }
 
   provisioner "local-exec" {
-    interpreter = [ "bash", "-c" ]
-    command = "aws ec2 reboot-instances --instance-ids ${aws_instance.infernet_router[0].id} --region ${var.region}"
+    interpreter = ["bash", "-c"]
+    command     = "aws ec2 reboot-instances --instance-ids ${aws_instance.infernet_router[0].id} --region ${var.region}"
   }
 
   depends_on = [aws_instance.infernet_router[0], aws_ssm_parameter.node_ips]

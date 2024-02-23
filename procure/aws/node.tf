@@ -4,12 +4,12 @@ resource "aws_instance" "nodes" {
   count         = var.node_count
   ami           = var.image
 
-  subnet_id = aws_subnet.node_subnet.id
+  subnet_id              = aws_subnet.node_subnet.id
   vpc_security_group_ids = [aws_security_group.security_group.id]
 
   user_data = templatefile("${path.module}/scripts/node.tpl", {
-      region       = var.region
-      node_id      = count.index
+    region  = var.region
+    node_id = count.index
   })
 
   root_block_device {
