@@ -1,16 +1,4 @@
 # Project
-
-variable "access_key_id" {
-  description = "AWS_ACCESS_KEY_ID for the AWS account"
-  type        = string
-}
-
-variable "secret_access_key" {
-  description = "AWS_SECRET_ACCESS_KEY for the AWS account"
-  type        = string
-  sensitive   = true
-}
-
 variable "region" {
   description = "The region where AWS resources will be created"
   type        = string
@@ -23,7 +11,6 @@ variable "deploy_router" {
 }
 
 # Nodes
-
 variable "node_count" {
   description = "Number of nodes to create"
   type        = number
@@ -46,17 +33,17 @@ variable "image" {
 
 variable "ip_allow_http" {
   description = "IP addresses and/or ranges to allow HTTP traffic from"
-  type	      = list(string)
+  type        = list(string)
 }
 
 variable "ip_allow_http_from_port" {
   description = "Ports that accept HTTP traffic. Start of range."
-  type	      = number
+  type        = number
 }
 
 variable "ip_allow_http_to_port" {
   description = "Ports that accept HTTP traffic. End of range."
-  type	      = number
+  type        = number
 }
 
 variable "ip_allow_ssh" {

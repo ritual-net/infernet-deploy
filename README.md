@@ -31,7 +31,8 @@ The Infernet Router REST server is configured automatically by Terraform. Howeve
     chmod 700 create_service_account.sh
     ./create_service_account.sh
     ```
-    This will require local authentication with the AWS CLI. Add `access_key_id` and `secret_access_key` to your Terraform variables (see step 3).
+    This will require aws credentials to be accessible by the provider. The provider will respect and
+    utilize the [AWS credentials provider chain](https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html) to check each possible source (eg: AWS access keys, an AWS_PROFILE, or sso credentials etc)
 
 2. Make a copy of the example configuration file [terraform.tfvars.example](procure/aws/terraform.tfvars.example):
     ```bash
