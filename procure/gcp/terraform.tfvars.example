@@ -15,6 +15,6 @@ is_production = false
 
 name = "infernet-deployment"
 nodes = {
-    "infernet-node-1-key" = "infernet-node-1-name",
-    "infernet-node-2-key" = "infernet-node-2-name"
+    "infernet-node-1-key" = ["europe-west1", "europe-west1-b"],
+    "infernet-node-2-key" = ["us-east4", "us-east4-c"]
 }
