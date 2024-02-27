@@ -1,14 +1,13 @@
 # GCE instances
 resource "google_compute_instance" "nodes" {
-  provider     = google
+  for_each     = var.nodes
+  name         = "node-${each.key}"
+  zone         = each.value[1]
   machine_type = var.machine_type
-
-  for_each = var.nodes
-  name     = "node-${each.value}"
 
   network_interface {
     network    = google_compute_network.node_net.id
-    subnetwork = google_compute_subnetwork.node_subnet.id
+    subnetwork = google_compute_subnetwork.node_subnet[each.value[0]].id
     stack_type = "IPV4_IPV6"
 
     access_config {
@@ -52,4 +51,23 @@ resource "google_compute_instance" "nodes" {
 
   # Disabled in production
   allow_stopping_for_update = var.is_production ? false : true
+
+  # Optional GPU
+  dynamic "guest_accelerator" {
+    for_each = var.gpu_count > 0 ? [1] : []
+    content {
+      type  = var.gpu_type
+      count = var.gpu_count
+    }
+  }
+
+  # Ensure to adjust the on_host_maintenance setting based on GPU
+  dynamic "scheduling" {
+    for_each = var.gpu_count > 0 ? [1] : []
+    content {
+      on_host_maintenance = "TERMINATE"
+      automatic_restart   = false
+      preemptible         = false
+    }
+  }
 }

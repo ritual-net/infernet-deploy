@@ -2,12 +2,12 @@
 resource "google_compute_instance" "infernet_router" {
   count        = var.deploy_router ? 1 : 0
   name         = "router-${var.name}"
-  machine_type = "e2-micro"
   zone         = var.zone
+  machine_type = "e2-small"
 
   network_interface {
     network    = google_compute_network.node_net.id
-    subnetwork = google_compute_subnetwork.node_subnet.id
+    subnetwork = google_compute_subnetwork.node_subnet[var.region].id
     stack_type = "IPV4_IPV6"
 
     access_config {
@@ -46,8 +46,7 @@ resource "google_compute_instance" "infernet_router" {
     }
   }
 
-  # Disabled in production
-  allow_stopping_for_update = var.is_production ? false : true
+  allow_stopping_for_update = true
 }
 
 # Router external IP

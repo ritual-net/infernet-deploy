@@ -35,8 +35,8 @@ variable "deploy_router" {
 # Nodes
 
 variable "nodes" {
-  description = "Map of node IDs to node names"
-  type        = map(string)
+  description = "Map of node IDs to node [region, zone]"
+  type        = map(tuple([string, string]))
 }
 
 variable "name" {
@@ -52,6 +52,18 @@ variable "machine_type" {
 variable "image" {
   description = "The image to use for the GCE instance"
   type        = string
+}
+
+variable "gpu_type" {
+  description = "The type of GPU to use for the GCE instance"
+  type        = string
+  default     = "nvidia-tesla-t4"
+}
+
+variable "gpu_count" {
+  description = "The number of GPUs to use for the GCE instance"
+  type        = number
+  default     = 0
 }
 
 variable "ip_allow_http" {
