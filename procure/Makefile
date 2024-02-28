@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 # Define the Terraform command
 TERRAFORM_CMD := terraform
 
