@@ -107,6 +107,17 @@ tflint --init
 tflint --recursive
 ```
 
+### Using Terraform Format
+```bash
+# Format AWS files
+cd procure/aws
+terraform fmt
+
+# Format GCP files
+cd procure/gcp
+terraform fmt
+```
+
 ## License
 
 [BSD 3-clause Clear](./LICENSE)

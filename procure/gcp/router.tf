@@ -11,12 +11,12 @@ resource "google_compute_instance" "infernet_router" {
     stack_type = "IPV4_IPV6"
 
     access_config {
-      nat_ip = google_compute_address.router_static_ip[0].address
+      nat_ip       = google_compute_address.router_static_ip[0].address
       network_tier = "PREMIUM"
     }
 
     ipv6_access_config {
-      network_tier  = "PREMIUM"
+      network_tier = "PREMIUM"
     }
   }
 
@@ -42,7 +42,7 @@ resource "google_compute_instance" "infernet_router" {
   boot_disk {
     initialize_params {
       image = var.image
-      size = 100
+      size  = 100
     }
   }
 
@@ -52,16 +52,16 @@ resource "google_compute_instance" "infernet_router" {
 
 # Router external IP
 resource "google_compute_address" "router_static_ip" {
-  count  = var.deploy_router ? 1 : 0
-  name   = "router-ip-${var.name}"
-  region = var.region
+  count        = var.deploy_router ? 1 : 0
+  name         = "router-ip-${var.name}"
+  region       = var.region
   address_type = "EXTERNAL"
   network_tier = "PREMIUM"
 }
 
 # Reset router when node IPs change
 resource "null_resource" "router_restarter" {
-  count    = var.deploy_router ? 1 : 0
+  count = var.deploy_router ? 1 : 0
   triggers = {
     node-ips = join(",", [for ip in google_compute_address.static_ip : ip.address])
   }

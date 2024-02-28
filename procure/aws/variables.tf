@@ -26,7 +26,7 @@ variable "deploy_router" {
 
 variable "nodes" {
   description = "Map of node IDs to node names"
-  type = map(string)
+  type        = map(string)
 }
 
 variable "name" {
@@ -46,17 +46,17 @@ variable "image" {
 
 variable "ip_allow_http" {
   description = "IP addresses and/or ranges to allow HTTP traffic from"
-  type	      = list(string)
+  type        = list(string)
 }
 
 variable "ip_allow_http_from_port" {
   description = "Ports that accept HTTP traffic. Start of range."
-  type	      = number
+  type        = number
 }
 
 variable "ip_allow_http_to_port" {
   description = "Ports that accept HTTP traffic. End of range."
-  type	      = number
+  type        = number
 }
 
 variable "ip_allow_ssh" {

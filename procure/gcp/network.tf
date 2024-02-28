@@ -1,25 +1,25 @@
 # VPC network
 resource "google_compute_network" "node_net" {
-  provider = google
-  name = "net-${var.name}"
+  provider                = google
+  name                    = "net-${var.name}"
   auto_create_subnetworks = false
 }
 
 # Subnet with IPv6 capabilities
 resource "google_compute_subnetwork" "node_subnet" {
-  provider = google
-  name = "subnet-${var.name}"
-  network = google_compute_network.node_net.name
-  ip_cidr_range = "10.0.0.0/8"
-  stack_type = "IPV4_IPV6"
+  provider         = google
+  name             = "subnet-${var.name}"
+  network          = google_compute_network.node_net.name
+  ip_cidr_range    = "10.0.0.0/8"
+  stack_type       = "IPV4_IPV6"
   ipv6_access_type = "EXTERNAL"
 }
 
 # Node ssh firewall
 resource "google_compute_firewall" "allow-ssh" {
   provider = google
-  name    = "allow-ssh-${var.name}"
-  network = google_compute_network.node_net.name
+  name     = "allow-ssh-${var.name}"
+  network  = google_compute_network.node_net.name
 
   allow {
     protocol = "icmp"
@@ -53,7 +53,7 @@ resource "google_compute_firewall" "allow-web" {
 resource "google_compute_address" "static_ip" {
   provider = google
   for_each = var.nodes
-  name = "ip-${each.value}"
+  name     = "ip-${each.value}"
 
   address_type = "EXTERNAL"
   network_tier = "PREMIUM"
