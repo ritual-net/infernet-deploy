@@ -5,13 +5,13 @@ resource "aws_instance" "nodes" {
 
   for_each = var.nodes
 
-  subnet_id = aws_subnet.node_subnet.id
+  subnet_id              = aws_subnet.node_subnet.id
   vpc_security_group_ids = [aws_security_group.security_group.id]
 
   user_data = templatefile("${path.module}/scripts/node.tpl", {
-      cluster-name = var.name
-      config-name  = "${each.key}.json"
-      region       = var.region
+    cluster-name = var.name
+    config-name  = "${each.key}.json"
+    region       = var.region
   })
 
   root_block_device {

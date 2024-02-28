@@ -18,5 +18,5 @@ resource "aws_ssm_parameter" "deploy_tar" {
 resource "aws_ssm_parameter" "node_ips" {
   name  = "node-ips-${var.name}"
   type  = "String"
-  value = join("\n", [for key, _ in aws_instance.nodes: "${aws_eip.static_ip[key].public_ip}:4000"])
+  value = join("\n", [for key, _ in aws_instance.nodes : "${aws_eip.static_ip[key].public_ip}:4000"])
 }

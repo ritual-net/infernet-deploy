@@ -5,9 +5,9 @@ output "router_ip" {
 output "nodes" {
   value = [
     for key, node in google_compute_instance.nodes : {
-      key  = key
-      id = node.name
-      ip   = google_compute_address.static_ip[key].address
+      key = key
+      id  = node.name
+      ip  = google_compute_address.static_ip[key].address
     }
   ]
 }

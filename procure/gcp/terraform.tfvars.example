@@ -1,4 +1,4 @@
-service_account_email = "terraform-deployer@project.iam.gserviceaccount.com"
+service_account_email = "ritual-deployer@project.iam.gserviceaccount.com"
 project = "project-id"
 region  = "region-id"
 zone    = "region-zone"
