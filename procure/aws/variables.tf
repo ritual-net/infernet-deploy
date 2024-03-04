@@ -15,7 +15,8 @@ variable "secret_access_key" {
   * In AWS, to deploy in different regions, we need a different provider block
   * for each region. This is because the region is a required field in the provider
   * block, and we cannot use variables in the provider block (or for_each, etc.)
-  * Therefore, we restrict the region to a single value.
+  * Therefore, we allow multi-zone deployments within the same region, but we restrict
+  * the region to a single value.
   */
 variable "region" {
   description = "The region where AWS resources will be created"
