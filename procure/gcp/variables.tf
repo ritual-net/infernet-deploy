@@ -16,54 +16,34 @@ variable "project" {
   type        = string
 }
 
-variable "region" {
-  description = "The region where GCP resources will be created"
-  type        = string
-}
-
-variable "zone" {
-  description = "The zone where GCP resources will be created"
-  type        = string
-}
-
-variable "deploy_router" {
-  description = "Whether or not to deploy the router"
-  type        = bool
-  default     = false
-}
-
-# Nodes
-
-variable "nodes" {
-  description = "Map of node IDs to node [region, zone]"
-  type        = map(tuple([string, string]))
-}
-
 variable "name" {
   description = "Name of the Cluster"
   type        = string
 }
 
-variable "machine_type" {
-  description = "The machine type of the GCE instances"
-  type        = string
+# Nodes
+
+variable "nodes" {
+  description = "Map of node IDs to node configurations"
+  type = map(object({
+    region       = string
+    zone         = string
+    machine_type = string
+    image        = string
+    gpu_type     = optional(string, "")
+    gpu_count    = optional(number, 0)
+  }))
 }
 
-variable "image" {
-  description = "The image to use for the GCE instance"
-  type        = string
-}
-
-variable "gpu_type" {
-  description = "The type of GPU to use for the GCE instance"
-  type        = string
-  default     = "nvidia-tesla-t4"
-}
-
-variable "gpu_count" {
-  description = "The number of GPUs to use for the GCE instance"
-  type        = number
-  default     = 0
+variable "router" {
+  description = "The router configuration"
+  type = object({
+    deploy       = bool
+    region       = optional(string, "us-east1")
+    zone         = optional(string, "us-east1-a")
+    machine_type = optional(string, "e2-small")
+    image        = optional(string, "ubuntu-2004-focal-v20231101")
+  })
 }
 
 variable "ip_allow_http" {

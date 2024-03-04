@@ -2,12 +2,12 @@
 resource "google_compute_instance" "nodes" {
   for_each     = var.nodes
   name         = "node-${each.key}"
-  zone         = each.value[1]
-  machine_type = var.machine_type
+  zone         = each.value.zone
+  machine_type = each.value.machine_type
 
   network_interface {
     network    = google_compute_network.node_net.id
-    subnetwork = google_compute_subnetwork.node_subnet[each.value[0]].id
+    subnetwork = google_compute_subnetwork.node_subnet[each.value.region].id
     stack_type = "IPV4_IPV6"
 
     access_config {
@@ -44,7 +44,7 @@ resource "google_compute_instance" "nodes" {
 
   boot_disk {
     initialize_params {
-      image = var.image
+      image = each.value.image
       size  = 200
     }
   }
@@ -54,16 +54,16 @@ resource "google_compute_instance" "nodes" {
 
   # Optional GPU
   dynamic "guest_accelerator" {
-    for_each = var.gpu_count > 0 ? [1] : []
+    for_each = each.value.gpu_count > 0 ? [1] : []
     content {
-      type  = var.gpu_type
-      count = var.gpu_count
+      type  = each.value.gpu_type
+      count = each.value.gpu_count
     }
   }
 
   # Ensure to adjust the on_host_maintenance setting based on GPU
   dynamic "scheduling" {
-    for_each = var.gpu_count > 0 ? [1] : []
+    for_each = each.value.gpu_count > 0 ? [1] : []
     content {
       on_host_maintenance = "TERMINATE"
       automatic_restart   = false

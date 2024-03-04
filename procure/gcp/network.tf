@@ -1,6 +1,6 @@
 locals {
-  # Extract all regions and include var.region, ensuring uniqueness
-  all_regions = toset(concat(flatten([for node in var.nodes : [node[0]]]), [var.region]))
+  # Extract all regions and include router, ensuring uniqueness
+  all_regions = toset(concat([for node in var.nodes : node.region], [var.router.region]))
 
   # Generate unique CIDR blocks for each zone.
   subnets_cidr = { for idx, region in tolist(local.all_regions) : region => cidrsubnet("192.168.0.0/16", 8, idx) }
@@ -47,7 +47,7 @@ resource "google_compute_firewall" "allow-web" {
   network = google_compute_network.node_net.name
 
   # Always allow traffic from router, if deployed
-  source_ranges = var.deploy_router ? concat(var.ip_allow_http, [google_compute_address.router_static_ip[0].address]) : var.ip_allow_http
+  source_ranges = var.router.deploy ? concat(var.ip_allow_http, [google_compute_address.router_static_ip[0].address]) : var.ip_allow_http
 
   allow {
     protocol = "tcp"
@@ -60,7 +60,7 @@ resource "google_compute_firewall" "allow-web" {
 # Node external IPs
 resource "google_compute_address" "static_ip" {
   for_each = var.nodes
-  region   = each.value[0]
+  region   = each.value.region
   name     = "ip-${each.key}"
 
   address_type = "EXTERNAL"

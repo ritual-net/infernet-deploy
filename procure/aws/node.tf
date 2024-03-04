@@ -1,11 +1,11 @@
 # EC2 instances
 resource "aws_instance" "nodes" {
-  instance_type = var.machine_type
-  ami           = var.image
+  for_each          = var.nodes
+  instance_type     = each.value.machine_type
+  ami               = each.value.image
+  availability_zone = each.value.zone
 
-  for_each = var.nodes
-
-  subnet_id              = aws_subnet.node_subnet.id
+  subnet_id              = aws_subnet.node_subnet[each.value.zone].id
   vpc_security_group_ids = [aws_security_group.security_group.id]
 
   user_data = templatefile("${path.module}/scripts/node.tpl", {
@@ -25,6 +25,6 @@ resource "aws_instance" "nodes" {
   disable_api_termination = var.is_production ? true : false
 
   tags = {
-    Name = "node-${each.value}"
+    Name = "node-${each.key}"
   }
 }
