@@ -23,15 +23,20 @@ variable "name" {
 
 # Nodes
 
+# NOTE: needs to be N2D or C2D instance if using confidential computing is enabled,
+# i.e. if is_confidential_compute is true
+# e.g. "n2d-standard-2", "c2d-standard-4", etc.
+# https://cloud.google.com/confidential-computing/confidential-vm/docs/os-and-machine-type#machine-type
 variable "nodes" {
   description = "Map of node IDs to node configurations"
   type = map(object({
-    region       = string
-    zone         = string
-    machine_type = string
-    image        = string
-    gpu_type     = optional(string, "")
-    gpu_count    = optional(number, 0)
+    region               = string
+    zone                 = string
+    machine_type         = string
+    image                = string
+    gpu_type             = optional(string, "")
+    gpu_count            = optional(number, 0)
+    confidential_compute = optional(bool, false)
   }))
 }
 

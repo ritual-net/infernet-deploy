@@ -63,13 +63,17 @@ resource "google_compute_instance" "nodes" {
     }
   }
 
-  # Ensure to adjust the on_host_maintenance setting based on GPU
+  # Ensure to adjust the on_host_maintenance setting based on GPU or confidential compute
   dynamic "scheduling" {
-    for_each = each.value.gpu_count > 0 ? [1] : []
+    for_each = each.value.gpu_count > 0 || each.value.confidential_compute ? [1] : []
     content {
       on_host_maintenance = "TERMINATE"
       automatic_restart   = false
-      preemptible         = false
     }
+  }
+
+  # confidential computing
+  confidential_instance_config {
+    enable_confidential_compute = each.value.confidential_compute ? true : false
   }
 }
