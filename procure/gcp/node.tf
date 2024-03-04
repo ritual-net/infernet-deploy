@@ -34,7 +34,7 @@ resource "google_compute_instance" "nodes" {
   metadata = {
     # Startup script
     startup-script = templatefile("${path.module}/scripts/node.tpl", {
-      gpu         = each.value.gpu_count > 0 ? true : false,
+      gpu = each.value.gpu_count > 0 ? true : false,
     })
 
     # Deployment files
