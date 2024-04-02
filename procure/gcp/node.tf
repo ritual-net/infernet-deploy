@@ -73,7 +73,10 @@ resource "google_compute_instance" "nodes" {
   }
 
   # confidential computing
-  confidential_instance_config {
-    enable_confidential_compute = each.value.confidential_compute ? true : false
+  dynamic "confidential_instance_config" {
+    for_each = each.value.confidential_compute ? [1] : []
+    content {
+      enable_confidential_compute = each.value.confidential_compute ? true : false
+    }
   }
 }
