@@ -1,7 +1,16 @@
+locals {
+  # Extract all zones and include router zone, ensuring uniqueness
+  all_zones = toset(concat([for node in var.nodes : node.zone], [var.router.zone]))
+
+  # Generate unique CIDR blocks for each zone.
+  # This assumes you have a limited number of zones and a /16 network allows for 256 /24 subnets.
+  subnets_cidr    = { for idx, zone in tolist(local.all_zones) : zone => cidrsubnet(aws_vpc.node_vpc.cidr_block, 8, idx) }
+  subnets_cidr_v6 = { for idx, zone in tolist(local.all_zones) : zone => cidrsubnet(aws_vpc.node_vpc.ipv6_cidr_block, 8, idx) }
+}
 
 # VPC
 resource "aws_vpc" "node_vpc" {
-  cidr_block                       = "10.0.0.0/16"
+  cidr_block                       = "192.168.0.0/16"
   assign_generated_ipv6_cidr_block = true
   enable_dns_support               = true
   enable_dns_hostnames             = true
@@ -13,24 +22,26 @@ resource "aws_vpc" "node_vpc" {
 
 # Subnet (with IPv6 capabilities)
 resource "aws_subnet" "node_subnet" {
+  for_each                = local.all_zones
   vpc_id                  = aws_vpc.node_vpc.id
-  cidr_block              = cidrsubnet(aws_vpc.node_vpc.cidr_block, 4, 1)
+  cidr_block              = local.subnets_cidr[each.value]
+  availability_zone       = each.value
   map_public_ip_on_launch = true
 
-  ipv6_cidr_block                 = cidrsubnet(aws_vpc.node_vpc.ipv6_cidr_block, 8, 1)
+  ipv6_cidr_block                 = local.subnets_cidr_v6[each.value]
   assign_ipv6_address_on_creation = true
 
   tags = {
-    Name = "subnet-${var.name}"
+    Name = "subnet-${var.name}-${each.value}"
   }
 }
 
 # Network Interface
 resource "aws_network_interface" "node_nic" {
   for_each  = var.nodes
-  subnet_id = aws_subnet.node_subnet.id
+  subnet_id = aws_subnet.node_subnet[each.value.zone].id
   tags = {
-    Name = "nic-${each.value}"
+    Name = "nic-${each.key}"
   }
 }
 
@@ -64,7 +75,8 @@ resource "aws_route_table" "route_table" {
 
 # Associate the route table with the subnet
 resource "aws_route_table_association" "rta" {
-  subnet_id      = aws_subnet.node_subnet.id
+  for_each       = local.all_zones
+  subnet_id      = aws_subnet.node_subnet[each.value].id
   route_table_id = aws_route_table.route_table.id
 }
 
@@ -85,8 +97,7 @@ resource "aws_security_group" "security_group" {
     protocol  = "tcp"
 
     # Allow traffic from configured IPs and router, if deployed
-    # cidr_blocks = concat(var.ip_allow_http, ["${aws_eip.router_eip.public_ip}/32"])
-    cidr_blocks = var.deploy_router ? concat(var.ip_allow_http, ["${aws_eip.router_eip[0].public_ip}/32"]) : var.ip_allow_http
+    cidr_blocks = var.router.deploy ? concat(var.ip_allow_http, ["${aws_eip.router_eip[0].public_ip}/32"]) : var.ip_allow_http
   }
 
   ingress {
@@ -118,6 +129,6 @@ resource "aws_eip" "static_ip" {
   instance          = aws_instance.nodes[each.key].id
 
   tags = {
-    Name = "eip-${each.value}"
+    Name = "eip-${each.key}"
   }
 }

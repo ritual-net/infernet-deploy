@@ -2,7 +2,7 @@ version: '3'
 
 services:
   node:
-    image: ritualnetwork/infernet-node:latest
+    image: ritualnetwork/infernet-node:latest-gpu
     ports:
       - "0.0.0.0:4000:4000"
     volumes:
@@ -12,6 +12,13 @@ services:
     tty: true
     networks:
       - network
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu]
     depends_on:
       - redis
     restart:
