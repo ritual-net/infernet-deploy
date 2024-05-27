@@ -10,7 +10,7 @@ resource "aws_instance" "nodes" {
 
   user_data = templatefile("${path.module}/scripts/node.tpl", {
     cluster-name = var.name
-    config-name  = "${each.key}.json"
+    node-name    = each.key
     region       = var.region
     gpu          = each.value.has_gpu
   })
