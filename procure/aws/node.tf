@@ -12,6 +12,7 @@ resource "aws_instance" "nodes" {
     cluster-name = var.name
     config-name  = "${each.key}.json"
     region       = var.region
+    gpu          = each.value.has_gpu
   })
 
   root_block_device {

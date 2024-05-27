@@ -21,10 +21,12 @@ nodes = {
     zone         = "us-east-2b"
     machine_type = "p2.xlarge" # GPU instance
     image        = "ami-02b696c88aad79a70",
+    has_gpu      = true,
   },
   "infernet-node-2-key-no-gpu" = {
     zone         = "us-east-2b"
     machine_type = "t2.medium"
     image        = "ami-05fb0b8c1424f266b",
+    has_gpu      = false,
   },
 }
