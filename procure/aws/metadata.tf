@@ -9,9 +9,11 @@ resource "aws_ssm_parameter" "config_file" {
 
 # Deployment files
 resource "aws_ssm_parameter" "deploy_tar" {
-  name  = "deploy-tar-${var.name}"
+  for_each = var.nodes
+
+  name  = "deploy-tar-${each.key}"
   type  = "SecureString"
-  value = filebase64("${path.module}/../deploy.tar.gz")
+  value = each.value.has_gpu ? filebase64("${path.module}/../deploy-gpu.tar.gz") : filebase64("${path.module}/../deploy.tar.gz")
 }
 
 # Node IPs

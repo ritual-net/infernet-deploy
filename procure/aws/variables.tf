@@ -31,6 +31,7 @@ variable "nodes" {
     zone         = string
     machine_type = string
     image        = string
+    has_gpu      = bool
   }))
 }
 
