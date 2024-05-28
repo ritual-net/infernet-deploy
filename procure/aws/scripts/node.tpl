@@ -1,5 +1,10 @@
 #! /bin/bash
 
+# Script to setup a node in an AWS ECS cluster. Scripts on AWS only run once, so we
+# need to set up a cron job to run and bring services back up on reboot. Installation
+# of docker and docker-compose is also necessary, and will only only happen once at
+# the time of node creation.
+
 # Install docker
 cd ~/
 sudo apt update
