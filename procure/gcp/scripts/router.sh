@@ -35,4 +35,4 @@ else
 fi
 
 # Run the container
-sudo docker run -d -p 4000:4000 --name router -v $(pwd)/ips.txt:/app/ips.txt --restart on-failure ritualnetwork/infernet-router:0.1.0
+sudo docker run -d -p 4000:4000 --name router -v $(pwd)/ips.txt:/app/ips.txt --restart on-failure ritualnetwork/infernet-router:1.0.0
