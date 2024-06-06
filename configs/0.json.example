@@ -6,11 +6,16 @@
   "chain": {
     "enabled": true,
     "rpc_url": "http://127.0.0.1:8545",
-    "coordinator_address": "0x...",
     "trail_head_blocks": 4,
     "wallet": {
       "max_gas_limit": 100000,
-      "private_key": "12345s"
+      "private_key": "12345s",
+      "payment_address": "0x...",
+      "allowed_sim_errors": []
+    },
+    "snapshot_sync": {
+      "sleep": 1.5,
+      "batch_size": 200
     }
   },
   "docker": {
@@ -18,7 +23,7 @@
     "password": "password"
   },
   "redis": {
-    "host": "localhost",
+    "host": "redis",
     "port": 6379
   },
   "forward_stats": true,
@@ -40,7 +45,12 @@
         "KEY1": "VALUE1",
         "KEY2": "VALUE2"
       },
-      "gpu": true
+      "gpu": false,
+      "accepted_payments": {
+        "0x0000000000000000000000000000000000000000": 1000000000000000000,
+        "0x59F2f1fCfE2474fD5F0b9BA1E73ca90b143Eb8d0": 1000000000000000000
+      },
+      "generates_proofs": true
     },
     {
       "id": "container-2",
@@ -58,7 +68,13 @@
       "env": {
         "KEY3": "VALUE3",
         "KEY4": "VALUE4"
-      }
+      },
+      "gpu": true,
+      "accepted_payments": {
+        "0x0000000000000000000000000000000000000000": 1000000000000000000,
+        "0x59F2f1fCfE2474fD5F0b9BA1E73ca90b143Eb8d0": 1000000000000000000
+      },
+      "generates_proofs": false
     }
   ]
 }

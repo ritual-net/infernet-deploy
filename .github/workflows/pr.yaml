@@ -18,6 +18,12 @@ jobs:
       with:
         extra_args: --all-files --show-diff-on-failure
 
+    - name: Run Format (AWS)
+      run: cd procure/aws && terraform fmt -check
+
+    - name: Run Format (GCP)
+      run: cd procure/gcp && terraform fmt -check
+
     - name: Setup TFLint
       uses: terraform-linters/setup-tflint@v3
       with:

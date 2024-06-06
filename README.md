@@ -7,13 +7,14 @@ Deploy a cluster of heterogenous [Infernet](https://github.com/ritual-net/infern
 1. [Install Terraform](https://developer.hashicorp.com/terraform/install)
 2. **Configure nodes**: A node configuration file **for each** node being deployed.
     - See [example configuration](configs/0.json.example).
-    - They must be named `0.json`, `1.json`, etc...
-        - Misnamed files are ignored.
+    - They must have **unique** names
+        - A straightforward approach would be `0.json`, `1.json`, etc...
     - They must be placed under the top-level `configs/` directory.
+    - Number and name of `.json` files must match the number and name of *keys* in the `nodes` variable in `terraform.tfvars`.
+        - See [terraform.tfvars.example](./procure/aws/terraform.tfvars.example).
+        - Each key should correspond to the name of a `.json` file, *excluding* the `.json` postfix.
     - Each node *strictly* requires its own configuration `.json` file, even if those are identical.
-    - Number of `.json` files must match the `node_count` variable in `terraform.tfvars`.
-        - Extra files are ignored.
-    - For instructions on configuring nodes, refer to the [Infernet Node](https://github.com/ritual-net/infernet-node).
+    - For instructions on configuring individual nodes, refer to the [Infernet Node](https://github.com/ritual-net/infernet-node).
 
 #### Infernet Router:
 The Infernet Router REST server is configured automatically by Terraform. However, if you plan to use it, you need to understand its implications:
@@ -104,6 +105,17 @@ tflint --init
 
 # Run on all directories
 tflint --recursive
+```
+
+### Using Terraform Format
+```bash
+# Format AWS files
+cd procure/aws
+terraform fmt
+
+# Format GCP files
+cd procure/gcp
+terraform fmt
 ```
 
 ## License

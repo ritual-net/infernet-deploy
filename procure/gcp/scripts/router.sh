@@ -15,7 +15,7 @@ cd "$HOME"
 
 # Fetch node IPs from metadata and save to file
 curl -H "Metadata-Flavor: Google" \
-     "http://metadata.google.internal/computeMetadata/v1/instance/attributes/node_ips" \
+     "http://metadata.google.internal/computeMetadata/v1/instance/attributes/node-ips" \
      > $HOME/ips.txt
 
 CONTAINER_NAME="router"
@@ -35,4 +35,4 @@ else
 fi
 
 # Run the container
-sudo docker run -d -p 4000:4000 --name router -v ./ips.txt:/app/ips.txt --restart on-failure ritualnetwork/infernet-router:0.1.0
+sudo docker run -d -p 4000:4000 --name router -v $(pwd)/ips.txt:/app/ips.txt --restart on-failure ritualnetwork/infernet-router:1.0.0

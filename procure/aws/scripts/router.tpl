@@ -15,7 +15,7 @@ cat << 'EOF' > $HOME/run_on_reboot.sh
 #!/bin/bash
 
 # Fetch node IPs from metadata and save to file
-aws ssm get-parameter --name "node_ips" --with-decryption --query "Parameter.Value" --output text --region "${region}" > $HOME/ips.txt
+aws ssm get-parameter --name "node-ips-${cluster-name}" --with-decryption --query "Parameter.Value" --output text --region "${region}" > $HOME/ips.txt
 
 # Prune existing router container
 CONTAINER_NAME="router"
@@ -28,7 +28,7 @@ else
 fi
 
 # Run the container
-sudo docker run -d -p 4000:4000 --name router -v $HOME/ips.txt:/app/ips.txt --restart on-failure ritualnetwork/infernet-router:0.1.0
+sudo docker run -d -p 4000:4000 --name router -v $HOME/ips.txt:/app/ips.txt --restart on-failure ritualnetwork/infernet-router:1.0.0
 EOF
 
 # Add the script to cron to run at reboot

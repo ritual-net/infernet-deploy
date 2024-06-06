@@ -1,6 +1,6 @@
 # IAM Role and Instance Profile
 resource "aws_iam_role" "ssm_role" {
-  name = "${var.instance_name}-role"
+  name = "role-${var.name}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -14,15 +14,11 @@ resource "aws_iam_role" "ssm_role" {
       },
     ],
   })
-
-  tags = {
-    Name = "${var.instance_name}-role"
-  }
 }
 
 # Policy to allow pulling secrets
 resource "aws_iam_policy" "ssm_policy" {
-  name        = "ssm_policy"
+  name        = "ssm_policy-${var.name}"
   description = "Policy to allow access to SSM"
 
   policy = jsonencode({
@@ -32,15 +28,11 @@ resource "aws_iam_policy" "ssm_policy" {
         Action = [
           "ssm:GetParameter",
         ],
-        Effect = "Allow",
+        Effect   = "Allow",
         Resource = "*"
       },
     ],
   })
-
-  tags = {
-    Name = "${var.instance_name}-ssm_policy"
-  }
 }
 
 # Attach policy to role
@@ -51,6 +43,6 @@ resource "aws_iam_role_policy_attachment" "ssm_policy_attachment" {
 
 # Attach role to profile
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = "${var.instance_name}-profile"
+  name = "profile-${var.name}"
   role = aws_iam_role.ssm_role.name
 }

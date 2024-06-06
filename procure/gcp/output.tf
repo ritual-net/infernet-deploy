@@ -4,11 +4,10 @@ output "router_ip" {
 
 output "nodes" {
   value = [
-    for i in range(length(google_compute_instance.nodes)): {
-      name = google_compute_instance.nodes[i].name
-      zone = google_compute_instance.nodes[i].zone
-      project = google_compute_instance.nodes[i].project
-      ip = google_compute_address.static_ip[i].address
+    for key, node in google_compute_instance.nodes : {
+      key = key
+      id  = node.name
+      ip  = google_compute_address.static_ip[key].address
     }
   ]
 }
